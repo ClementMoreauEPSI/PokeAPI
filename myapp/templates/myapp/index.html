@@ -1,0 +1,162 @@
+<html>
+<head>
+<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+     <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+</head>
+<body>
+<div id="header">
+ <img src="https://carlisletheacarlisletheatre.org/images/pokemon-clipart-transparent-background-2.png" heigth="200"  width="250">
+
+<a href="http://127.0.0.1:8000/myapp/"><img src="https://www.freepnglogos.com/uploads/pokemon-go-png-logo/pokemon-go-apk-png-logo-9.png" ></a>
+<img src="https://pbs.twimg.com/media/DxH4R-FX4AAoaQA.png" heigth="200"  width="250"    >
+
+</div>
+<div id="TeamPokemon">
+
+    {% for poke in listedepokemon%}
+
+        
+
+    {% endfor %}
+
+</div>
+<div id="listPokemon">
+    {% for results in contenu.results %}
+            <div class="card ">
+                <div>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{results.id}}.png" heigth="150"  width="200"    >
+                </div>
+                <div class="cardPokemon">
+                    <h1 class="titre">{{results.name}}</h1>
+
+                    <div class="fixed-action-btn" style="display: flex; justify-content: flex-end;">
+                        <a class="btn-floating btn-large red">
+                            <i class="large material-icons">mode_edit</i>
+                        </a>
+                        <ul>
+                            <li><a class="btn-floating red tooltipped" data-position="top" data-tooltip="Voir les détails du Pokémon" href="http://127.0.0.1:8000/myapp/pokemon/{{results.id}}"><i class="material-icons">remove_red_eye</i></a></li>
+                            <li><a class="btn-floating Blue darken-1 tooltipped" data-position="top" data-tooltip="Ajouter le Pokémon à votre équipe" onclick="addPokemon({{results}})"><i class="material-icons">add_box</i></a>  </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+</div>
+<style>
+.fixed-action-btn{
+    position: relative !important;
+}
+.btn-floating{
+    {% comment %} box-shadow: 1px 2px 4px 0px #00000091;
+    box-shadow: -2px -1px 4px 1px #f5f5f5; {% endcomment %}
+}
+
+.cardPokemon{
+        width: 100%;
+}
+
+#TeamPokemon{
+    width: 100%;
+    height: 10vh;
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+var listedepokemon = [];
+const team = document.getElementById("TeamPokemon"); 
+
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.fixed-action-btn');
+    var instances = M.FloatingActionButton.init(elems, {
+      direction: 'left'
+    });
+    var elemsToolTips = document.querySelectorAll('.tooltipped');
+    var instanceToolTips = M.Tooltip.init(elemsToolTips);
+  });
+
+
+function ajouterListePoke(pokemon){
+    dansListe = false
+    listedepokemon.foreach(currPokemon => {
+        if(currPokemon.id == pokemon.id ){
+            dansListe = true
+        }
+    )
+    if(dansListe){
+        listedepokemon.push(pokemon);
+        team.innerHTML += `<div class='imgPoke' id='${pokemon.id}'> <img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png' /> </div>`
+        
+    }
+    
+
+}
+
+
+function addPokemon(Pokemon){
+
+    axios.get(`http://127.0.0.1:8000/myapp/AddPokemon/${Pokemon.id}`)
+    .then(function (response) {
+        console.log("Reponse axios OK")
+        M.toast({html: 'Pokémon ajouté a votre équipe !'})
+        var retour = ajouterListePoke(Pokemon)
+       
+    })
+    .catch(function (error) {
+        console.log("Reponse axios NOK")
+
+        M.toast({html: 'Echec de l\'ajout du Pokémon dans votre équipe !'})
+    })
+}
+   
+
+</script>
+</body>
+</html>
+
+<style>
+*{
+    transition:all ease 0.5s
+}
+body{
+    background-color: whitesmoke;
+}
+#header{
+    display:flex;
+    justify-content: space-around;
+    background-color: #f44336;
+}
+#listPokemon{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: whitesmoke;
+}
+.titre{ 
+    color: #3563ad ;
+    font-size: 40px;
+}
+.card{
+    display:flex;
+    overflow: hidden;
+    width: 600px;
+    margin-top: 10px;
+    box-shadow: 1px 4px 13px 0px #00000070;
+    border-radius: 10px;
+    background-color: white;
+}
+imgPoke{
+
+
+}
+
+</style>

@@ -1,0 +1,95 @@
+<html>
+<head>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+     <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+</head>
+<body>
+<div id="header">
+ <img src="https://carlisletheacarlisletheatre.org/images/pokemon-clipart-transparent-background-2.png" heigth="200"  width="250">
+
+<a href="http://127.0.0.1:8000/myapp/"><img src="https://www.freepnglogos.com/uploads/pokemon-go-png-logo/pokemon-go-apk-png-logo-9.png" ></a>
+<img src="https://pbs.twimg.com/media/DxH4R-FX4AAoaQA.png" heigth="200"  width="250">
+
+</div>
+<div id="Description">
+<img src="{{contenu.sprites.front_default}}" >
+{% for element in contenu.forms %}
+    <center><h1 class="titre">{{element.name}}</h1></center>
+{% endfor %}
+<img src="{{contenu.sprites.back_default}}" >
+
+</div>
+<div id="attaques">
+    {% for element in attaques %}
+        <div class="attaque">
+            <h1>{{element.name}}</h1>
+            <div class="carac">
+                {% if element.power is not none %}
+                    <p>Puissance : {{element.power}}</p>
+                {% endif %}
+                {% if element.accuracy is not none %}
+                <p>Precision : {{element.accuracy}}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>
+
+<style>
+body{
+    background-color: whitesmoke;
+}
+#header{
+    display:flex;
+    justify-content: space-around;
+    background-color: #f44336;
+}
+#Description{
+    display: flex;
+    justify-content: space-around;
+    background-color: whitesmoke;
+}
+#attaques{
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 10px;
+    width: 60vw;
+    height: 40vh;
+    margin: auto;
+    margin-top: 30px;
+    box-shadow: 4px 1px 7px #0000006b;
+    background: white;
+
+    
+}
+.attaque{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width:50%;
+    heigth:50%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 7px #00000091
+    
+}
+.attaque h1{
+    margin: auto;
+}
+.carac{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.titre{ 
+    color: #3563ad;
+}
+</style>
