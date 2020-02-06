@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.utils.safestring import mark_safe
 import requests
 import random
 
@@ -20,7 +21,7 @@ def index(request):
             print("efface tout")
             request.session['teamPokemon'] = []
     context = {'contenu' : result,
-    'teamPokemon': request.session['teamPokemon']}
+    'teamPokemon': mark_safe(request.session['teamPokemon'])}
      
     return render(request, "myapp/index.html", context)
 
@@ -54,13 +55,16 @@ def pokemon(request, number):
 def AddPokemon(request, id):
    r = requests.get("https://pokeapi.co/api/v2/pokemon/%d" % id)
    save_session = request.session['teamPokemon']
-   save_session.append(r.json())
-#   request.session['teamPokemon'].append(r.json())
-   request.session['teamPokemon'] = save_session
-   print("_________________________________________________________")
-   print(request.session['teamPokemon'])
-   print("_________________________________________________________")
+   if(len(save_session) <6):
+        save_session.append(r.json())
 
+   request.session['teamPokemon'] = save_session
+
+   return JsonResponse({
+       'success': request.session['teamPokemon']
+   }, safe=False)
+
+def GetSessionTeam(request):
    return JsonResponse({
        'success': request.session['teamPokemon']
    }, safe=False)
