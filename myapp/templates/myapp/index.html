@@ -19,15 +19,7 @@
 <img src="https://pbs.twimg.com/media/DxH4R-FX4AAoaQA.png" heigth="200"  width="250"    >
 
 </div>
-<div id="TeamPokemon">
 
-    {% for poke in listedepokemon%}
-
-        
-
-    {% endfor %}
-
-</div>
 <div id="listPokemon">
     {% for results in contenu.results %}
             <div class="card ">
@@ -91,7 +83,9 @@ function ajouterListePoke(pokemon){
         if(currPokemon.id == pokemon.id ){
             dansListe = true
         }
-    )
+    })
+
+
     if(dansListe){
         listedepokemon.push(pokemon);
         team.innerHTML += `<div class='imgPoke' id='${pokemon.id}'> <img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png' /> </div>`
