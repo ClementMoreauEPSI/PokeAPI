@@ -20,6 +20,12 @@
 
 </div>
 
+    {% comment %} {% for poke in teamPokemon%}
+        <span>cc</span>
+        <img src='{{poke.sprites.front_default}}' />
+
+    {% endfor %} {% endcomment %}
+</div>
 <div id="listPokemon">
     {% for results in contenu.results %}
             <div class="card ">
@@ -74,42 +80,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     var elemsToolTips = document.querySelectorAll('.tooltipped');
     var instanceToolTips = M.Tooltip.init(elemsToolTips);
+    initTeam()
   });
 
 
 function ajouterListePoke(pokemon){
-    dansListe = false
-    listedepokemon.foreach(currPokemon => {
-        if(currPokemon.id == pokemon.id ){
-            dansListe = true
-        }
-    })
-
-
-    if(dansListe){
+    console.log("liste pokemon: ",listedepokemon)
+    console.log("list length",listedepokemon.length )
+    if(listedepokemon.length < 6){
         listedepokemon.push(pokemon);
-        team.innerHTML += `<div class='imgPoke' id='${pokemon.id}'> <img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png' /> </div>`
-        
-    }
+        team.innerHTML += `<div class='imgPoke' id='${pokemon.id}'><a href='http://127.0.0.1:8000/myapp/pokemon/${pokemon.id}'><img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png' /></a> </div>`
+    }    
     
 
 }
 
-
 function addPokemon(Pokemon){
-
-    axios.get(`http://127.0.0.1:8000/myapp/AddPokemon/${Pokemon.id}`)
+        axios.get(`http://127.0.0.1:8000/myapp/AddPokemon/${Pokemon.id}`)
     .then(function (response) {
         console.log("Reponse axios OK")
         M.toast({html: 'Pokémon ajouté a votre équipe !'})
-        var retour = ajouterListePoke(Pokemon)
+        ajouterListePoke(Pokemon)
        
     })
-    .catch(function (error) {
-        console.log("Reponse axios NOK")
+}
+function initTeam(){
 
-        M.toast({html: 'Echec de l\'ajout du Pokémon dans votre équipe !'})
+    axios.get(`http://127.0.0.1:8000/myapp/GetSessionTeam`)
+    .then(function (response) {
+        response.data.success.forEach(currentPokemon => ajouterListePoke(currentPokemon));
+        console.log("response: ",response)
+       
     })
+    
 }
    
 
@@ -148,9 +151,15 @@ body{
     border-radius: 10px;
     background-color: white;
 }
-imgPoke{
+imgPoke:hover{
 
 
 }
+
+#TeamPokemon{
+    display: flex;
+    justify-content: center;
+}
+
 
 </style>
